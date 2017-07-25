@@ -46,8 +46,8 @@ function checkRadio(id){
          <div style="display: {{finish}}">
            <br> Accounts set for renewal: {{', '.join(renewList)}} </br>
            <br> Accounts set for deletion: {{', '.join(deleteList)}} </br>
-           <br> Accounts set to be closed:{{', '.join(closeList)}} </br>
-           <br> Accounts that are unknown:{{', '.join(unknownList)}} </br>
+           <br> Accounts set to be closed: {{', '.join(closeList)}} </br>
+           <br> Accounts that are unknown: {{', '.join(unknownList)}} </br>
          </div>
          <div class="users" style="display: {{accounts}}">
            <div class="title">

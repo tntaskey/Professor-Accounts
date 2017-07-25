@@ -18,6 +18,7 @@ unknownList=[]
 closeList=[]
 deleteList=[]
 uid=[]
+gid=""
 
 try:
             from urlparse import parse_qs
@@ -49,18 +50,21 @@ def get_gid():
     deleteList[:] = []
     queryvars[:] = []
     uid[:] = []
+    gid=""
     USER_IN=request.query.get("USER_IN")
     finish = "none";
 
-    if USER_IN not in open('Files/Groups').read():
-        error = "block";
-        accounts = "none";
-        return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, accounts=accounts, error=error, finish=finish)
+    print USER_IN
 
     for i in open('Files/Groups'):
         if USER_IN == i.split(":",3)[0]:
-            gid=i.split(":",3)[2]
+            gid=i.split(":",3)[2];
+        elif USER_IN not in open('Files/Groups').read():
+            error = "block";
+            accounts = "none";
+            return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, accounts=accounts, error=error, finish=finish)
 
+    print gid
 
     #check Passwd for user name, if GID matchs pgroup GID then add user to userList
     for i in open('Files/Passwd'):
@@ -87,21 +91,33 @@ def post_gid():
             htmlvalue=queryvars.get(htmlvar)[0]
             if htmlvar.endswith("radio"):
                 if htmlvalue == "known":
-                    print(htmlvar.split("radio",1)[0] + " is renew")
-                    renewList.append(htmlvar.split("radio",1)[0])
-                    #print("This is where you do things with confirmed accounts")
+                    if htmlvar.split("radio",1)[0] in renewList:
+                        pass;
+                    else:
+                        print(htmlvar.split("radio",1)[0] + " is renew")
+                        renewList.append(htmlvar.split("radio",1)[0])
+                        #print("This is where you do things with confirmed accounts")
                 elif htmlvalue == "unknown":
-                    print(htmlvar.split("radio",1)[0] + "is unknown")
-                    unknownList.append(htmlvar.split("radio",1)[0])
-                   # print("This is where you do things with unknown accounts")
+                    if htmlvar.split("radio",1)[0] in unknownList:
+                        pass;
+                    else:
+                        print(htmlvar.split("radio",1)[0] + "is unknown")
+                        unknownList.append(htmlvar.split("radio",1)[0])
+                        # print("This is where you do things with unknown accounts")
                 elif htmlvalue == "close":
-                    print(htmlvar.split("radio",1)[0] + "is closed")
-                    closeList.append(htmlvar.split("radio",1)[0])
-                   # print("This is where you do things with unknown accounts")
+                    if htmlvar.split("radio",1)[0] in closeList:
+                        pass;
+                    else:
+                        print(htmlvar.split("radio",1)[0] + "is closed")
+                        closeList.append(htmlvar.split("radio",1)[0])
+                        # print("This is where you do things with unknown accounts")
             elif htmlvar.endswith("check"):
-                    print("Deletion of " + htmlvar.split("check",1)[0] + " is confirmed")
-                    deleteList.append(htmlvar.split("check",1)[0])
-                   #print("This is where you do things with deleted accounts")
+                    if htmlvar.split("check",1)[0] in deleteList:
+                        pass;
+                    else:
+                        print("Deletion of " + htmlvar.split("check",1)[0] + " is confirmed")
+                        deleteList.append(htmlvar.split("check",1)[0])
+                        #print("This is where you do things with deleted accounts")
             else: #ignore the 'submit'
                 pass
 
@@ -128,6 +144,8 @@ def post_gid():
         for i in deleteList:
             if i in closeList:
                 closeList.remove(i)
+
+        print unknownList
 
         #Do things with your csvs using these lists, confirmedList unknownList deleteList
         print "RENEW LIST " + str(renewList)
