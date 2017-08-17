@@ -4,6 +4,7 @@ from bottle import *
 import os
 import urlparse # if we're pre-2.6, this will not include parse_qs
 global User_list
+global Full_list
 global renewList
 global unknownList
 global closeList
@@ -13,6 +14,7 @@ global uid
 global queryvars
 queryvars=[]
 User_list=[]
+Full_list=[]
 renewList=[]
 unknownList=[]
 closeList=[]
@@ -37,13 +39,14 @@ def post_home():
     error = "none";
     finish = "none";
     USER_IN=request.query.get("USER_IN")
-    return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, accounts=accounts, error=error, finish=finish)
+    return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, Full_list=Full_list, accounts=accounts, error=error, finish=finish)
 
 @get("/GID")
 def get_gid():
     global gid
     global uid
     User_list[:] = []
+    Full_list[:] = []
     renewList[:] = []
     unknownList[:] = []
     closeList[:] = []
@@ -62,7 +65,7 @@ def get_gid():
         elif USER_IN not in open('Files/Groups').read():
             error = "block";
             accounts = "none";
-            return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, accounts=accounts, error=error, finish=finish)
+            return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, Full_list=Full_list, accounts=accounts, error=error, finish=finish)
 
     print gid
 
@@ -71,14 +74,15 @@ def get_gid():
             if gid == i.split(":",5)[3]:
                 uid.append(i.split(":",5)[2])
                 User_list.append(i.split(":",5)[0])
+                Full_list.append(i.split(':')[4])
     if gid == "":
             error = "block";
             accounts = "none";
-            return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, USER_IN=USER_IN, User_list=User_list, error=error, accounts=accounts, finish=finish)
+            return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, USER_IN=USER_IN, User_list=User_list, Full_list=Full_list, error=error, accounts=accounts, finish=finish)
     else:
             accounts = "block";
             error = "none";
-            return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, accounts=accounts, error=error, finish=finish)
+            return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, Full_list=Full_list, accounts=accounts, error=error, finish=finish)
 
 @get("/end")
 def post_gid():
@@ -152,5 +156,5 @@ def post_gid():
         print "UNKNOWN LIST " + str(unknownList)
         print "DELETE LIST " + str(deleteList)
      	print "CLOSE LIST" + str(closeList)
-        return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, error=error, accounts=accounts, finish=finish)
+        return template('index.tpl', renewList=renewList, unknownList=unknownList, deleteList=deleteList, closeList=closeList, User_list=User_list, Full_list=Full_list, error=error, accounts=accounts, finish=finish)
 run(host='localhost', port=8081, debug=True)

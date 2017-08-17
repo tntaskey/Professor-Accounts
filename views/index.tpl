@@ -35,10 +35,12 @@ function checkRadio(id){
    <div class="sub_input">
      <div class="header">
       <h1>Known Accounts</h1>
+<!--	
       <form method="get" action="/GID">
         Professor GID: <input name="USER_IN" id="USER_IN" pattern="[A-Za-z]{1,}" class="text_input" type="text">
         <input type="submit" id="input">
       </form>
+-->
       <h3 style="display: {{error}}">Sorry, that groupname doesn't exist, try again?</h3>
      </div>
      <form method="get" action="/end">
@@ -57,7 +59,7 @@ function checkRadio(id){
            % for i in User_list:
           <!-- % radioname = "User" + str(x) -->
              %user=User_list[x]
-             {{User_list[x]}}
+             <b>{{Full_list[x]}} ({{User_list[x]}}) </b>
              %dofunc="checkRadio("+'"' + user + '"' +")"
            <div class"accounts">
               <input type="radio" id={{user}}renew name={{user}}radio value="known" onclick={{dofunc}}>Renew Account
@@ -65,7 +67,7 @@ function checkRadio(id){
 	            <input type="radio" id={{user}}unk name={{user}}radio value="unknown" onclick={{dofunc}} checked>Unknown account
               <span id={{user}}hide style="display: none"><input type="checkbox" id={{user}}del name={{user}}check value="delete">Delete Account</span>
            </div>
-           <br><br>
+           <br>
            % x+=1
            % end
            <input type="submit" name=submit>
